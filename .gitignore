@@ -158,3 +158,5 @@ evaluation_results/*
 results/*
 debug/*
 visualization/*
+temp
+*.pt

@@ -8,70 +8,86 @@
 University of Washington
 </div>
 
-
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/samurai-adapting-segment-anything/visual-object-tracking-on-lasot-ext)](https://paperswithcode.com/sota/visual-object-tracking-on-lasot-ext?p=samurai-adapting-segment-anything-model-for)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/samurai-adapting-segment-anything-model-for/visual-object-tracking-on-got-10k)](https://paperswithcode.com/sota/visual-object-tracking-on-got-10k?p=samurai-adapting-segment-anything-model-for)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/samurai-adapting-segment-anything-model-for/visual-object-tracking-on-needforspeed)](https://paperswithcode.com/sota/visual-object-tracking-on-needforspeed?p=samurai-adapting-segment-anything-model-for)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/samurai-adapting-segment-anything-model-for/visual-object-tracking-on-lasot)](https://paperswithcode.com/sota/visual-object-tracking-on-lasot?p=samurai-adapting-segment-anything-model-for)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/samurai-adapting-segment-anything-model-for/visual-object-tracking-on-otb-2015)](https://paperswithcode.com/sota/visual-object-tracking-on-otb-2015?p=samurai-adapting-segment-anything-model-for)
-
 [[Arxiv]](https://arxiv.org/abs/2411.11922) [[Project Page]](https://yangchris11.github.io/samurai/) [[Raw Results]](https://drive.google.com/drive/folders/1ssiDmsC7mw5AiItYQG4poiR1JgRq305y?usp=sharing) 
 
-This repository is the official implementation of SAMURAI: Adapting Segment Anything Model for Zero-Shot Visual Tracking with Motion-Aware Memory
-
-https://github.com/user-attachments/assets/9d368ca7-2e9b-4fed-9da0-d2efbf620d88
+This repository is a **fork of** the official implementation of SAMURAI: Adapting Segment Anything Model for Zero-Shot Visual Tracking with Motion-Aware Memory
 
 ## Getting Started
+
+Code tested on `Cuda 12.1` with `Python 3.10.11` on `Windows`
+
+```
+> nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Wed_Feb__8_05:53:42_Coordinated_Universal_Time_2023
+Cuda compilation tools, release 12.1, V12.1.66
+Build cuda_12.1.r12.1/compiler.32415258_0
+```
+---
 
 #### SAMURAI Installation 
 
 SAM 2 needs to be installed first before use. The code requires `python>=3.10`, as well as `torch>=2.3.1` and `torchvision>=0.18.1`. Please follow the instructions [here](https://github.com/facebookresearch/sam2?tab=readme-ov-file) to install both PyTorch and TorchVision dependencies. You can install **the SAMURAI version** of SAM 2 on a GPU machine using:
 ```
-cd sam2
-pip install -e .
-pip install -e ".[notebooks]"
+> cd sam2
+> pip install -e .
+> pip install -e ".[notebooks]"
 ```
 
 Please see [INSTALL.md](https://github.com/facebookresearch/sam2/blob/main/INSTALL.md) from the original SAM 2 repository for FAQs on potential issues and solutions.
-```
-pip install matplotlib==3.7 tikzplotlib jpeg4py opencv-python lmdb pandas scipy
-```
 
-#### SAM 2.1 Checkpoint Download
+Install dependencies and ultralytics (for prompt)
 
 ```
-cd checkpoints && \
-./download_ckpts.sh && \
-cd ..
+> pip install matplotlib tikzplotlib jpeg4py opencv-python lmdb pandas scipy loguru
+> pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 --upgrade
+> pip install ultralytics 
 ```
 
-#### Data Preparation
+#### SAM 2.1 Checkpoint Download 
 
-Please prepare the data in the following format:
 ```
-data/LaSOT
-├── airplane/
-│   ├── airplane-1/
-│   │   ├── full_occlusion.txt
-│   │   ├── groundtruth.txt
-│   │   ├── img
-│   │   ├── nlp.txt
-│   │   └── out_of_view.txt
-│   ├── airplane-2/
-│   ├── airplane-3/
-│   ├── ...
-├── basketball
-├── bear
-├── bicycle
-...
-├── training_set.txt
-└── testing_set.txt
+> cd checkpoints
+> ./download_ckpts.sh
+> cd ..
 ```
+
+Run the same with `git bash` if it opens .sh file in vscode for you
+
 
 #### Main Inference
 ```
-python scripts/main_inference.py 
+> python sam2/infer.py --video "path-to-video"
 ```
+
+
+For example,
+```
+> python sam2/infer.py --video "C://Users//johndoe//samurai//myvideo.mp4"
+```
+
+### Running the Video with Frame Selection
+
+*   Run the `infer.py` file using Python, passing the video file as an argument: `python infer.py --video <video_file>`
+*   The program will start playing the video to select a frame containing a person by pressing the **SPACE** key.
+*   Once a frame is selected, the program will wait for user input in the terminal window.
+
+![alt text](image.png)
+
+### Entering Person ID
+
+*   Enter the ID of one of the detected people in the terminal window when prompted.
+*   The entered ID should match one of the IDs assigned to the detected persons by the YOLO11x model.
+
+![alt text](image-1.png)
+
+### Loading and Displaying Model Outputs
+-----------------------------------------
+
+*   After entering the correct ID, the program will load the YOLO11x model and SAM2 side-by-side and show the results
+
+
 
 ## Acknowledgment
 
